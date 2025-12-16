@@ -10,6 +10,7 @@ const createPlaylistRoutes = (handler, authenticate) => {
   router.delete('/playlists/:id', handler.deletePlaylist);
   router.post('/playlists/:id/songs', handler.postPlaylistSong);
   router.get('/playlists/:id/songs', handler.getPlaylistSongs);
+  router.delete('/playlists/:id/songs', handler.deletePlaylistSong);
 
   return router;
 };

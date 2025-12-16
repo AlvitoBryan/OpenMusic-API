@@ -1,6 +1,10 @@
 const { nanoid } = require('nanoid');
 const pool = require('./db');
-const { AuthorizationError, NotFoundError } = require('../utils/errors');
+const {
+  AuthorizationError,
+  NotFoundError,
+  InvariantError,
+} = require('../utils/errors');
 
 class PlaylistsService {
   async addPlaylist(name, owner) {
@@ -100,6 +104,20 @@ class PlaylistsService {
       username: playlist.username,
       songs: songsResult.rows,
     };
+  }
+
+  async deleteSongFromPlaylist(playlistId, songId, owner) {
+    await this.verifyPlaylistOwner(playlistId, owner);
+
+    const query = {
+      text: 'DELETE FROM playlist_songs WHERE playlist_id = $1 AND song_id = $2 RETURNING id',
+      values: [playlistId, songId],
+    };
+
+    const result = await pool.query(query);
+    if (!result.rowCount) {
+      throw new InvariantError('Lagu tidak ditemukan di playlist');
+    }
   }
 }
 

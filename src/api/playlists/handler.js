@@ -13,6 +13,7 @@ class PlaylistsHandler {
     this.deletePlaylist = this.deletePlaylist.bind(this);
     this.postPlaylistSong = this.postPlaylistSong.bind(this);
     this.getPlaylistSongs = this.getPlaylistSongs.bind(this);
+    this.deletePlaylistSong = this.deletePlaylistSong.bind(this);
   }
 
   async postPlaylist(req, res, next) {
@@ -100,6 +101,24 @@ class PlaylistsHandler {
         data: {
           playlist,
         },
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async deletePlaylistSong(req, res, next) {
+    try {
+      validatePlaylistSongPayload(req.body);
+      const { id } = req.params;
+      const { songId } = req.body;
+      const { userId } = req;
+
+      await this._playlistsService.deleteSongFromPlaylist(id, songId, userId);
+
+      res.status(200).json({
+        status: 'success',
+        message: 'Lagu berhasil dihapus dari playlist',
       });
     } catch (error) {
       next(error);
