@@ -1,21 +1,6 @@
 exports.shorthands = undefined;
 
 exports.up = (pgm) => {
-  pgm.createTable('albums', {
-    id: {
-      type: 'varchar(50)',
-      primaryKey: true,
-    },
-    name: {
-      type: 'text',
-      notNull: true,
-    },
-    year: {
-      type: 'integer',
-      notNull: true,
-    },
-  });
-
   pgm.createTable('songs', {
     id: {
       type: 'varchar(50)',
@@ -60,7 +45,4 @@ exports.up = (pgm) => {
 exports.down = (pgm) => {
   pgm.dropConstraint('songs', 'fk_songs_album_id');
   pgm.dropTable('songs');
-  pgm.dropTable('albums');
 };
-
-
