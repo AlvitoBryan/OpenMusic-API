@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const path = require('path');
+const fs = require('fs');
 const multer = require('multer');
 const AlbumsService = require('./services/albumService');
 const SongsService = require('./services/songService');
@@ -36,6 +37,9 @@ const app = express();
 app.use(express.json());
 
 const uploadsDir = path.join(__dirname, '..', 'public', 'images');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
 const storage = multer.diskStorage({
   destination: uploadsDir,
   filename: (req, file, cb) => {

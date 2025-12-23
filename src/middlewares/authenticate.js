@@ -2,6 +2,10 @@ const { AuthenticationError } = require('../utils/errors');
 
 const createAuthenticationMiddleware = (tokenManager) => (req, res, next) => {
   try {
+    if (req.method === 'GET' && /^\/albums\/[^/]+\/likes$/.test(req.path)) {
+      return next();
+    }
+
     const authHeader = req.headers.authorization;
     if (!authHeader) {
       throw new AuthenticationError('Missing authentication');

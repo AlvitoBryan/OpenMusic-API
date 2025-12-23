@@ -1,3 +1,5 @@
+const { InvariantError } = require('../../utils/errors');
+
 class UploadsHandler {
   constructor(albumsService, baseUrl) {
     this._albumsService = albumsService;
@@ -11,13 +13,17 @@ class UploadsHandler {
       const { id } = req.params;
 
       if (!req.file) {
-        return res.status(400).json({
-          status: 'fail',
-          message: 'Berkas gambar tidak ditemukan',
-        });
+        throw new InvariantError('Berkas gambar tidak ditemukan');
       }
 
-      const fileUrl = `${this._baseUrl}/images/${req.file.filename}`;
+      if (!req.file.filename) {
+        throw new InvariantError('Nama berkas tidak valid');
+      }
+
+      const protocol = req.protocol || 'http';
+      const host = req.get('host');
+      const baseUrl = host ? `${protocol}://${host}` : this._baseUrl;
+      const fileUrl = `${baseUrl}/images/${req.file.filename}`;
 
       await this._albumsService.addCoverUrl(id, fileUrl);
 
@@ -26,6 +32,7 @@ class UploadsHandler {
         message: 'Sampul berhasil diunggah',
       });
     } catch (error) {
+      console.error('Upload cover error:', error);
       return next(error);
     }
   }
