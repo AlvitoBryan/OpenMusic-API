@@ -9,9 +9,8 @@ const {
 class PlaylistsService {
   async getPlaylistWithSongs(playlistId) {
     const playlistQuery = {
-      text: `SELECT playlists.id, playlists.name, users.username
+      text: `SELECT playlists.id, playlists.name
              FROM playlists
-             LEFT JOIN users ON playlists.owner = users.id
              WHERE playlists.id = $1`,
       values: [playlistId],
     };
@@ -34,11 +33,18 @@ class PlaylistsService {
 
     const songsResult = await pool.query(songsQuery);
 
+    const formattedSongs = songsResult.rows.map((song) => ({
+      id: song.id,
+      title: song.title,
+      performer: song.performer,
+    }));
+
     return {
-      id: playlist.id,
-      name: playlist.name,
-      username: playlist.username,
-      songs: songsResult.rows,
+      playlist: {
+        id: playlist.id,
+        name: playlist.name,
+        songs: formattedSongs,
+      },
     };
   }
 }

@@ -38,7 +38,6 @@ const init = async () => {
 
       channel.ack(message);
     } catch (error) {
-      // Untuk saat ini log error saja, pesan tidak di-ack agar bisa dicoba ulang secara manual.
       console.error('Error memproses pesan:', error);
     }
   });
