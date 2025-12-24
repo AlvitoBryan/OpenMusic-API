@@ -33,4 +33,3 @@ class MailSender {
 
 module.exports = MailSender;
 
-

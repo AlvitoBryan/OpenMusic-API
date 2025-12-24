@@ -1,13 +1,12 @@
 {
-  "name": "submission-1",
-  "version": "1.0.0",
-  "description": "",
+  "name": "openmusic-api",
+  "version": "3.0.0",
+  "description": "OpenMusic API - HTTP Server with Producer",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "migrate": "node-pg-migrate -r dotenv/config -m migrations",
-    "consumer": "node src/consumer.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -24,7 +23,6 @@
     "multer": "^2.0.2",
     "nanoid": "^5.1.6",
     "node-pg-migrate": "^8.0.3",
-    "nodemailer": "^7.0.11",
     "pg": "^8.16.3",
     "redis": "^5.10.0"
   },
@@ -32,3 +30,4 @@
     "nodemon": "^3.1.11"
   }
 }
+

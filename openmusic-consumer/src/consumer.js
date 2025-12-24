@@ -19,6 +19,8 @@ const init = async () => {
     durable: true,
   });
 
+  console.log('Consumer siap menerima pesan dari queue:', queue);
+
   channel.consume(queue, async (message) => {
     try {
       if (!message) return;
@@ -26,23 +28,24 @@ const init = async () => {
       const content = message.content.toString();
       const { playlistId, targetEmail } = JSON.parse(content);
 
+      console.log(`Memproses ekspor playlist ${playlistId} untuk ${targetEmail}`);
+
       const playlist = await playlistsService.getPlaylistWithSongs(playlistId);
 
       await mailSender.sendEmail(targetEmail, JSON.stringify(playlist));
 
+      console.log(`Email berhasil dikirim ke ${targetEmail}`);
+
       channel.ack(message);
     } catch (error) {
       // Untuk saat ini log error saja, pesan tidak di-ack agar bisa dicoba ulang secara manual.
-      // eslint-disable-next-line no-console
-      console.error(error);
+      console.error('Error memproses pesan:', error);
     }
   });
 };
 
 init().catch((error) => {
-  // eslint-disable-next-line no-console
-  console.error(error);
+  console.error('Error inisialisasi consumer:', error);
   process.exit(1);
 });
-
 
